@@ -11,6 +11,6 @@ git submodule add https://github.com/win8linux/WatchyGSR_Addon_QLock.git "Watchf
 ```
 2. Add the following include to `src/GSR.ino` in Watchy GSR:
 ```cpp
-#include "../Watchface Addons/QLock/QLock.h"
+#include "../Watchface Addons/QLock/GSRWatchFaceQLock.h"
 ```
 3. Compile!

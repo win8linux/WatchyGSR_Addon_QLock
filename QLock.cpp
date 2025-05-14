@@ -1,15 +1,17 @@
 #include "QLock.h"
 
-WatchyGSR watchyGSR;
+class QLock : public WatchyGSR {
+public:
+    void drawWatchFace()
+    {
+        WatchyGSR::display.drawBitmap(0, 0, epd_bitmap_qlock, 200, 200, WatchyGSR.BackColor(),
+            WatchyGSR.ForeColor());
+    }
 
-    void drawWatchFace() {
-        WatchyGSR::display.drawBitmap(0, 0, epd_bitmap_qlock, 200, 200, watchyGSR.BackColor(),
-                           watchyGSR.ForeColor());
-    };
+    std::bitset<11> bitmap[10];
 
-   std::bitset<11> bitmap[10];
-
-    void reset() {
+    void reset()
+    {
         bitmap[0] = 0b00100111111;
         bitmap[1] = 0b01000000011;
         bitmap[2] = 0b00000000001;
@@ -19,9 +21,10 @@ WatchyGSR watchyGSR;
             bitmap[i] = bitmap[i].set();
         }
         bitmap[9] = 0b11111000000;
-    };
+    }
 
-    void setHours() {
+    void setHours()
+    {
         auto hr = WatchTime.Local.Hour % 12;
 
         if (hr == 0) {
@@ -33,46 +36,47 @@ WatchyGSR watchyGSR;
         }
 
         switch (hr) {
-            case 1:
-                bitmap[5] ^= 0b11100000000;
-                break;
-            case 2:
-                bitmap[6] ^= 0b00000000111;
-                break;
-            case 3:
-                bitmap[5] ^= 0b00000011111;
-                break;
-            case 4:
-                bitmap[6] ^= 0b11110000000;
-                break;
-            case 5:
-                bitmap[6] ^= 0b00001111000;
-                break;
-            case 6:
-                bitmap[5] ^= 0b00011100000;
-                break;
-            case 7:
-                bitmap[8] ^= 0b11111000000;
-                break;
-            case 8:
-                bitmap[7] ^= 0b11111000000;
-                break;
-            case 9:
-                bitmap[4] ^= 0b00000001111;
-                break;
-            case 10:
-                bitmap[9] ^= 0b11100000000;
-                break;
-            case 11:
-                bitmap[7] ^= 0b00000111111;
-                break;
-            case 12:
-                bitmap[8] ^= 0b00000111111;
-                break;
+        case 1:
+            bitmap[5] ^= 0b11100000000;
+            break;
+        case 2:
+            bitmap[6] ^= 0b00000000111;
+            break;
+        case 3:
+            bitmap[5] ^= 0b00000011111;
+            break;
+        case 4:
+            bitmap[6] ^= 0b11110000000;
+            break;
+        case 5:
+            bitmap[6] ^= 0b00001111000;
+            break;
+        case 6:
+            bitmap[5] ^= 0b00011100000;
+            break;
+        case 7:
+            bitmap[8] ^= 0b11111000000;
+            break;
+        case 8:
+            bitmap[7] ^= 0b11111000000;
+            break;
+        case 9:
+            bitmap[4] ^= 0b00000001111;
+            break;
+        case 10:
+            bitmap[9] ^= 0b11100000000;
+            break;
+        case 11:
+            bitmap[7] ^= 0b00000111111;
+            break;
+        case 12:
+            bitmap[8] ^= 0b00000111111;
+            break;
         }
-    };
+    }
 
-    void setMinutes() {
+    void setMinutes()
+    {
         auto m = WatchTime.Local.Minute;
         auto diff = m - m % 5;
 
@@ -85,96 +89,97 @@ WatchyGSR watchyGSR;
         }
 
         switch (diff) {
-            case 0:
-                bitmap[1].set();
-                bitmap[2].set();
-                bitmap[3].set();
-                bitmap[4] |= 0b11110000000;
-                break;
+        case 0:
+            bitmap[1].set();
+            bitmap[2].set();
+            bitmap[3].set();
+            bitmap[4] |= 0b11110000000;
+            break;
 
-            case 5:
-                bitmap[1].set();
-                bitmap[2] |= 0b11111100000;
-                bitmap[3].set();
-                break;
+        case 5:
+            bitmap[1].set();
+            bitmap[2] |= 0b11111100000;
+            bitmap[3].set();
+            break;
 
-            case 10:
-                bitmap[1].set();
-                bitmap[2].set();
-                bitmap[3] |= 0b11110000011;
-                break;
+        case 10:
+            bitmap[1].set();
+            bitmap[2].set();
+            bitmap[3] |= 0b11110000011;
+            break;
 
-            case 15:
-                bitmap[2].set();
-                bitmap[3].set();
-                bitmap[9] |= 0b00000111111;
-                break;
+        case 15:
+            bitmap[2].set();
+            bitmap[3].set();
+            bitmap[9] |= 0b00000111111;
+            break;
 
-            case 20:
-                bitmap[1].set();
-                bitmap[2] |= 0b00000011110;
-                bitmap[3].set();
-                break;
+        case 20:
+            bitmap[1].set();
+            bitmap[2] |= 0b00000011110;
+            bitmap[3].set();
+            break;
 
-            case 25:
-                bitmap[1].set();
-                bitmap[3].set();
-                break;
+        case 25:
+            bitmap[1].set();
+            bitmap[3].set();
+            break;
 
-            case 30:
-                bitmap[1].set();
-                bitmap[2].set();
-                bitmap[3] |= 0b00000111011;
-                break;
+        case 30:
+            bitmap[1].set();
+            bitmap[2].set();
+            bitmap[3] |= 0b00000111011;
+            break;
 
-            case 35:
-                bitmap[1].set();
-                bitmap[3] |= 0b11110111000;
-                break;
+        case 35:
+            bitmap[1].set();
+            bitmap[3] |= 0b11110111000;
+            break;
 
-            case 40:
-                bitmap[1].set();
-                bitmap[2] |= 0b00000011110;
-                bitmap[3] |= 0b11110111000;
-                break;
+        case 40:
+            bitmap[1].set();
+            bitmap[2] |= 0b00000011110;
+            bitmap[3] |= 0b11110111000;
+            break;
 
-            case 45:
-                bitmap[2].set();
-                bitmap[3] |= 0b11111111100;
-                break;
+        case 45:
+            bitmap[2].set();
+            bitmap[3] |= 0b11111111100;
+            break;
 
-            case 50:
-                bitmap[1].set();
-                bitmap[2].set();
-                bitmap[3] |= 0b11110000000;
-                break;
+        case 50:
+            bitmap[1].set();
+            bitmap[2].set();
+            bitmap[3] |= 0b11110000000;
+            break;
 
-            case 55:
-                bitmap[1].set();
-                bitmap[2] |= 0b11111100000;
-                bitmap[3] |= 0b11110111000;
-                break;
+        case 55:
+            bitmap[1].set();
+            bitmap[2] |= 0b11111100000;
+            bitmap[3] |= 0b11110111000;
+            break;
         }
 
         switch (m % 5) {
-            case 0:
-                WatchyGSR::display.drawBitmap(0, 0, epd_bitmap_chequerboard, 16, 18,
-                                   watchyGSR.BackColor());
-            case 1:
-                WatchyGSR::display.drawBitmap(200 - 11, 0, epd_bitmap_chequerboard, 16, 18,
-                                   watchyGSR.BackColor());
-            case 2:
-                WatchyGSR::display.drawBitmap(200 - 12, 200 - 10, epd_bitmap_chequerboard,
-                                   16, 18, watchyGSR.BackColor());
-            case 3:
-                WatchyGSR::display.drawBitmap(0, 200 - 10, epd_bitmap_chequerboard, 16, 18,
-                                   watchyGSR.BackColor());
-            case 4:
-                break;
+        case 0:
+            WatchyGSR::display.drawBitmap(0, 0, epd_bitmap_chequerboard, 16, 18,
+                WatchyGSR.BackColor());
+        case 1:
+            WatchyGSR::display.drawBitmap(200 - 11, 0, epd_bitmap_chequerboard, 16, 18,
+                WatchyGSR.BackColor());
+        case 2:
+            WatchyGSR::display.drawBitmap(200 - 12, 200 - 10, epd_bitmap_chequerboard,
+                16, 18, WatchyGSR.BackColor());
+        case 3:
+            WatchyGSR::display.drawBitmap(0, 200 - 10, epd_bitmap_chequerboard, 16, 18,
+                WatchyGSR.BackColor());
+        case 4:
+            break;
         }
-    };
+    }
 
-    void draw() {
+    void draw()
+    {
         uint16_t bitset;
         for (size_t y = 0; y < 10; y++) {
             bitset = (int)bitmap[y].to_ulong();
@@ -183,12 +188,13 @@ WatchyGSR watchyGSR;
             while (bitset != 0) {
                 if (bitset & 0x1) {
                     WatchyGSR::display.drawBitmap(12 + (10 - x) * 16, 10 + y * 18,
-                                       epd_bitmap_chequerboard, 16, 18,
-                                       watchyGSR.BackColor());
+                        epd_bitmap_chequerboard, 16, 18,
+                        WatchyGSR.BackColor());
                 }
                 bitset >>= 1;
                 p++;
                 x++;
             }
         }
-    };
+    }
+};
